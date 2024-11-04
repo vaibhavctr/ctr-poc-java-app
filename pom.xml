@@ -28,7 +28,7 @@
             <version>1.13.0</version>
             <configuration>
                 <appName>${functionAppName}</appName>
-                <resourceGroup>my-resource-group</resourceGroup> <!-- Update to your resource group -->
+                <resourceGroup>jenkins-rg-dev</resourceGroup> <!-- Update to your resource group -->
                 <region>your-region</region> <!-- Update to your function app's region -->
                 <deploymentType>zip</deploymentType> <!-- Specifies a zip deployment -->
             </configuration>
