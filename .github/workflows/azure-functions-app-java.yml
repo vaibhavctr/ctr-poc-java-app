@@ -6,26 +6,41 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: windows-latest  # For Linux, use ubuntu-latest
-    environment: dev         # References 'dev' environment in GitHub
+    runs-on: ubuntu-latest
 
-    permissions:
-      id-token: write        # Required for OIDC authentication
-      contents: read
-    
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # Uncomment the step below if you want to use OIDC for authentication
-    - name: Azure Login with OIDC
+    - name: Set up Java
+      uses: actions/setup-java@v3
+      with:
+        java-version: '11'  # Ensure this matches your Function App Java version
+
+    - name: Login to Azure
       uses: azure/login@v1
       with:
-        client-id: ${{ secrets.AZURE_CLIENT_ID }}   # Azure Managed Identity's Client ID
-        tenant-id: ${{ secrets.AZURE_TENANT_ID }}   # Azure Tenant ID
-        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  # Azure Subscription ID
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-    - name: Deploy to Azure
+    - name: Build with Maven
+      run: mvn clean package
+      env:
+        AZURE_FUNCTIONAPP_NAME: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+
+    - name: Deploy to Staging Slot
+      uses: azure/functions-action@v1
+      with:
+        app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
+        slot-name: ${{ secrets.AZURE_FUNCTIONAPP_SLOT }}
+        package: target/your-function.jar  # Update this path to match the output JAR file name
+
+    - name: Run Tests in Staging
       run: |
-        # Example deployment commands
-        az webapp list --output table  # Replace this with your actual deployment command
+        # Add any test scripts or HTTP requests to validate the deployment here
+        echo "Testing deployment in staging slot"
+        # For example, use curl to send a request and check the response
+        response=$(curl -s -w "%{http_code}" -o /dev/null https://<staging-slot-url>/api/HttpExample?name=Azure)
+        if [ "$response" -ne 200 ]; then
+          echo "Test failed. Deployment aborted."
+          exit 1
+        fi
