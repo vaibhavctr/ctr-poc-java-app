@@ -6,8 +6,13 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # For Linux, use ubuntu-latest
+    environment: dev         # References 'dev' environment in GitHub
 
+    permissions:
+      id-token: write        # Required for OIDC authentication
+      contents: read
+    
     steps:
     - name: Checkout Code
       uses: actions/checkout@v3
@@ -18,10 +23,13 @@ jobs:
         distribution: 'temurin'
         java-version: '17'  # Ensure this matches your Function App Java version
 
-    - name: Login to Azure
+    # OIDC for authentication
+    - name: Azure Login with OIDC
       uses: azure/login@v1
       with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+        client-id: ${{ secrets.AZURE_CLIENT_ID }}   # Azure Managed Identity's Client ID
+        tenant-id: ${{ secrets.AZURE_TENANT_ID }}   # Azure Tenant ID
+        subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}  # Azure Subscription ID
 
     - name: Build with Maven
       run: mvn clean package
