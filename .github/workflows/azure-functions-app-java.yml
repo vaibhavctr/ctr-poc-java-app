@@ -41,7 +41,7 @@ jobs:
       with:
         app-name: ${{ secrets.AZURE_FUNCTIONAPP_NAME }}
         slot-name: ${{ secrets.AZURE_FUNCTIONAPP_SLOT }}
-        package: target/your-function.jar  # Update this path to match the output JAR file name
+        package: 'target/MyFunctionApp-1.0-SNAPSHOT.jar'  # Update this path to match the output JAR file name
 
     - name: Run Tests in Staging
       run: |
