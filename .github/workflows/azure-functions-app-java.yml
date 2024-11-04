@@ -2,7 +2,7 @@ name: Deploy Java Project to Azure Function App
 
 on:
   push:
-    branches: ["main"]
+    branches: ["dev"]
 
 jobs:
   build-and-deploy:
