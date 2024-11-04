@@ -20,18 +20,19 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>com.microsoft.azure</groupId>
-                <artifactId>azure-functions-maven-plugin</artifactId>
-                <version>1.13.0</version>
-                <configuration>
-                    <appName>${functionAppName}</appName>
-                    <resourceGroup>my-resource-group</resourceGroup> <!-- Update to your resource group -->
-                    <region>your-region</region> <!-- Update to your function app's region -->
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+<build>
+    <plugins>
+        <plugin>
+            <groupId>com.microsoft.azure</groupId>
+            <artifactId>azure-functions-maven-plugin</artifactId>
+            <version>1.13.0</version>
+            <configuration>
+                <appName>${functionAppName}</appName>
+                <resourceGroup>my-resource-group</resourceGroup> <!-- Update to your resource group -->
+                <region>your-region</region> <!-- Update to your function app's region -->
+                <deploymentType>zip</deploymentType> <!-- Specifies a zip deployment -->
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 </project>
