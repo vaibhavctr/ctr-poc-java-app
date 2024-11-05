@@ -43,7 +43,7 @@
                 <region>Canada Central</region>
                 <deploymentType>zip</deploymentType>
                 <runtime>
-                    <os>linux</os>
+                    <os>windows</os>
                     <javaVersion>Java 17</javaVersion>
                 </runtime>
             </configuration>
