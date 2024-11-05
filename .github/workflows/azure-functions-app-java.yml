@@ -6,17 +6,12 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest  # Use windows-latest if necessary, but ubuntu-latest is generally faster for CI
-
-    environment: dev         # References the 'dev' environment in GitHub
+    runs-on: ubuntu-latest  # For Linux, or use windows-latest if necessary
+    environment: dev        # References the 'dev' environment in GitHub
 
     permissions:
-      id-token: write        # Required for OIDC authentication
+      id-token: write       # Required for OIDC authentication
       contents: read
-
-    env:
-      AZURE_FUNCTIONAPP_NAME: ctr-dev-cc-app           # Function app name
-      AZURE_FUNCTIONAPP_SLOT: ctr-dev-cc-app-test      # Deployment slot name (if using a slot)
 
     steps:
     - name: Checkout Code
@@ -25,11 +20,16 @@ jobs:
     - name: Set up Java
       uses: actions/setup-java@v3
       with:
-        distribution: 'temurin'                        # Java distribution
-        java-version: '17'                             # Java version
+        distribution: 'temurin'
+        java-version: '17'
 
-    - name: Build with Maven and Package as ZIP
+    - name: Build with Maven
       run: mvn clean package azure-functions:package
+
+    - name: Manually Create ZIP if Missing
+      run: |
+        cd target/azure-functions/ctr-dev-cc-app
+        zip -r functionapp.zip .
 
     - name: Azure Login with OIDC
       uses: azure/login@v1
@@ -42,5 +42,4 @@ jobs:
       uses: azure/functions-action@v1
       with:
         app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
-        slot-name: ${{ env.AZURE_FUNCTIONAPP_SLOT }}
-        package: 'target/azure-functions/ctr-dev-cc-app/functionapp.zip'  # Path to the generated ZIP file
+        package: 'target/azure-functions/ctr-dev-cc-app/functionapp.zip'
