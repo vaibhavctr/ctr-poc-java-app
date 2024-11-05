@@ -8,8 +8,8 @@
     <packaging>jar</packaging>
 
     <properties>
-        <java.version>11</java.version>
-        <functionAppName>my-azure-function</functionAppName>
+        <java.version>17</java.version>
+        <functionAppName>ctr-dev-cc-app</functionAppName>
     </properties>
 
     <dependencies>
@@ -27,9 +27,9 @@
             <artifactId>azure-functions-maven-plugin</artifactId>
             <version>1.13.0</version>
             <configuration>
-                <appName>${functionAppName}</appName>
+                <appName>ctr-dev-cc-app</appName>
                 <resourceGroup>jenkins-rg-dev</resourceGroup> <!-- Update to your resource group -->
-                <region>your-region</region> <!-- Update to your function app's region -->
+                <region>Canada Central</region> <!-- Update to your function app's region -->
                 <deploymentType>zip</deploymentType> <!-- Specifies a zip deployment -->
             </configuration>
         </plugin>
