@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.example</groupId>
-    <artifactId>MyFunctionApp</artifactId>
+    <artifactId>ctr-dev-cc-app</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -20,19 +20,23 @@
         </dependency>
     </dependencies>
 
-<build>
-    <plugins>
-        <plugin>
-            <groupId>com.microsoft.azure</groupId>
-            <artifactId>azure-functions-maven-plugin</artifactId>
-            <version>1.13.0</version>
-            <configuration>
-                <appName>ctr-dev-cc-app</appName>
-                <resourceGroup>jenkins-rg-dev</resourceGroup> <!-- Update to your resource group -->
-                <region>Canada Central</region> <!-- Update to your function app's region -->
-                <deploymentType>zip</deploymentType> <!-- Specifies a zip deployment -->
-            </configuration>
-        </plugin>
-    </plugins>
-</build>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>com.microsoft.azure</groupId>
+                <artifactId>azure-functions-maven-plugin</artifactId>
+                <version>1.13.0</version>
+                <configuration>
+                    <appName>${functionAppName}</appName> <!-- Reference the functionAppName property -->
+                    <resourceGroup>jenkins-rg-dev</resourceGroup> <!-- Specify your resource group -->
+                    <region>Canada Central</region> <!-- Specify your Azure region -->
+                    <deploymentType>zip</deploymentType> <!-- Ensures a zip package -->
+                    <runtime>
+                        <os>linux</os> <!-- Specify 'linux' or 'windows' based on your Function App's OS -->
+                        <javaVersion>Java 17</javaVersion> <!-- Matches your Java version in properties -->
+                    </runtime>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
