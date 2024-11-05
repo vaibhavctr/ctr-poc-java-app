@@ -41,5 +41,5 @@ jobs:
     - name: Deploy to Azure Function App Slot
       uses: azure/functions-action@v1
       with:
-        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        app-name: ctr-dev-cc-app
         package: 'target/azure-functions/ctr-dev-cc-app/functionapp.zip'
