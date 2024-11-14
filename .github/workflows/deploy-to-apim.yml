@@ -1,0 +1,55 @@
+name: Deploy Java Project to Azure Function App and APIM
+
+on:
+  push:
+    branches: ["features/apis"]  # Trigger the workflow on the 'dev' branch
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest          # For Linux; use windows-latest if necessary
+    environment: dev                # References the 'dev' environment in GitHub
+
+    permissions:
+      id-token: write               # Required for OIDC authentication
+      contents: read
+
+    steps:
+      # Step 1: Checkout Code
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Set up Java and Gradle
+      - name: Set up Java and Gradle
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Cache Gradle dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle
+
+      # Step 3: Build and Test with Gradle
+      - name: Build and Test with Gradle
+        run: ./gradlew build
+
+      # Step 4: Azure Login with OIDC
+      - name: Azure Login with OIDC
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+
+      # Step 5: Deploy OpenAPI Spec to APIM
+      - name: Deploy API to APIM
+        run: |
+          az apim api import --resource-group ctr-dev-westeu-rg0511 \
+                             --service-name ctr-dev-westeu-apim05 \
+                             --path /my-api \
+                             --specification-format OpenApiJson \
+                             --specification-file-path ./openapi.json
