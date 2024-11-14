@@ -24,3 +24,14 @@ java {
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
+
+dependencies {
+    // Spring Boot Starter Web for REST Controller and Mappings
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+
+    // AssertJ for fluent assertions in tests
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+
+    // JUnit 5 for testing
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.9.3'
+}
