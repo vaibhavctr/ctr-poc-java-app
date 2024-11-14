@@ -1,4 +1,4 @@
-name: Deploy Java Project to Azure Function App and APIM
+name: Deploy API to APIM
 
 on:
   push:
@@ -52,4 +52,4 @@ jobs:
                              --service-name ctr-dev-westeu-apim05 \
                              --path /my-api \
                              --specification-format OpenApiJson \
-                             --specification-file-path ./openapi.json
+                             --specification-path ./openapi.json
